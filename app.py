@@ -1,64 +1,3 @@
-# from flask import Flask, request, render_template, redirect, flash, session
-# from flask_debugtoolbar import DebugToolbarExtension
-# from surveys import satisfaction_survey as survey
-
-# app = Flask(__name__)
-
-# app.config['SECRET_KEY'] = 'bowser'
-# app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-# debug = DebugToolbarExtension(app)
-
-# RESPONSES_KEY = "responses"
-
-
-# @app.route('/')
-# # creates a survey form with the info from the survey class thats coded in the survey_start.html
-# def home_page():
-#     return render_template('survey_start.html', survey=survey)
-
-# # create POST route to redirect to the question page
-
-
-# @app.route('/start', methods=['POST'])
-# def start_survey():
-#     session[RESPONSES_KEY] = []
-
-#     return redirect('/questions/0')
-
-# # use int to turn the question to a number so u can access with []
-# # response is to grab the answer from the checked boxes
-
-# @app.route("/questions/<int:qid>")
-# def show_question(qid):
-#     """Display current question."""
-#     responses = session.get(RESPONSES_KEY)
-
-#     if (responses is None):
-#         # trying to access question page too soon
-#         return redirect("/")
-
-#     if (len(responses) == len(survey.questions)):
-#         # They've answered all the questions! Thank them.
-#         return redirect("/complete")
-
-#     if (len(responses) != qid):
-#         # Trying to access questions out of order.
-#         flash(f"Invalid question id: {qid}.")
-#         return redirect(f"/questions/{len(responses)}")
-
-#     question = survey.questions[qid]
-#     return render_template(
-#         "question.html", question_num=qid, question=question)
-
-
-# @app.route('/answer', methods=['POST'])
-# def handle_responses():
-#     choice = request.form['answer']
-#     response = session[RESPONSES_KEY]
-#     response.append(choice)
-#     session[RESPONSES_KEY] = response
-#     return redirect(f'/questions{len(response)}')
-
 from flask import Flask, request, render_template, redirect, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 from surveys import satisfaction_survey as survey
@@ -77,14 +16,14 @@ debug = DebugToolbarExtension(app)
 
 @app.route("/")
 def show_survey_start():
-    """Select a survey."""
+ 
 
     return render_template("survey_start.html", survey=survey)
 
 
 @app.route("/begin", methods=["POST"])
 def start_survey():
-    """Clear the session of responses."""
+   
 
     session[RESPONSES_KEY] = []
 
@@ -117,15 +56,14 @@ def show_question(qid):
     responses = session.get(RESPONSES_KEY)
 
     if (responses is None):
-        # trying to access question page too soon
+        flash('trying to access question page too soon', 'error')
         return redirect("/")
 
     if (len(responses) == len(survey.questions)):
-        # They've answered all the questions! Thank them.
+        flash('Congrats Your Done!', 'success')
         return redirect("/complete")
 
     if (len(responses) != qid):
-        # Trying to access questions out of order.
         flash(f"Invalid question id: {qid}.")
         return redirect(f"/questions/{len(responses)}")
 
